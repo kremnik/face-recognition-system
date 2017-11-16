@@ -17,7 +17,6 @@ def main():
 			paths = paths[0:5] # just 5 pictures for speed
 			
 			print("Loading model")
-			# facenet.load_model("C:\\Users\\alex\\_machine\\facenet\\_tests\\20170511-185253")
 			facenet.load_model("20170511-185253")
 			images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
 			embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
