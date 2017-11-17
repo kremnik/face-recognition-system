@@ -25,7 +25,7 @@ def main():
 			image_size = 160
 			embedding_size = embeddings.get_shape()[1]
 			
-			print('Runnning forward pass on LFW images')
+			print('Runnning forward pass')
 			batch_size = 10
 			nrof_images = len(paths)
 			nrof_batches = int(math.ceil(1.0*nrof_images / batch_size))
@@ -38,8 +38,19 @@ def main():
 				images = facenet.load_data(paths_batch, False, False, image_size)
 				feed_dict = { images_placeholder:images, phase_train_placeholder:False }
 				emb_array[start_index:end_index,:] = sess.run(embeddings, feed_dict=feed_dict)
-				
-			print(emb_array)
+			
+			n_images = len(paths)
+			print('Distance matrix')
+			print('    ', end='')
+			for i in range(n_images):
+				print('    %1d     ' % i, end='')
+			print('')
+			for i in range(n_images):
+				print('%1d  ' % i, end='')
+				for j in range(n_images):
+					dist = np.sqrt(np.sum(np.square(np.subtract(emb_array[i,:], emb_array[j,:]))))
+					print('  %1.4f  ' % dist, end='')
+				print('')	
 	
 if __name__ == '__main__':
     main()
