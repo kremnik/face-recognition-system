@@ -7,11 +7,12 @@ import math
 import tensorflow as tf
 import numpy as np
 import facenet
+from sklearn.manifold import TSNE # for dimension reduction
 
 def main():
 	with tf.Graph().as_default():
 		with tf.Session() as sess:
-			data_set = facenet.get_dataset("../../datasets/lfw/lfw_mtcnnpy_160")
+			data_set = facenet.get_dataset("../../datasets/ownpeople/ownpeople_mtcnnpy_160")
 			paths, label_list = facenet.get_image_paths_and_labels(data_set)
 			
 			paths = paths[0:5] # just 5 pictures for speed
@@ -50,7 +51,12 @@ def main():
 				for j in range(n_images):
 					dist = np.sqrt(np.sum(np.square(np.subtract(emb_array[i,:], emb_array[j,:]))))
 					print('  %1.4f  ' % dist, end='')
-				print('')	
+				print('')
+
+			print("t-SNE dimension reduction")
+			X = TSNE(n_components=2).fit_transform(emb_array)
+			print(X)
+			
 	
 if __name__ == '__main__':
     main()
