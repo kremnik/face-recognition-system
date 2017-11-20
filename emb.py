@@ -49,10 +49,17 @@ def main():
 			for i in range(n_images):
 				print('%1d  ' % i, end='')
 				for j in range(n_images):
-					dist = np.sqrt(np.sum(np.square(np.subtract(emb_array[i,:], emb_array[j,:]))))
-					print('  %1.4f  ' % dist, end='')
+					dist = np.linalg.norm(emb_array[i,:] - emb_array[j,:])
+					print('  %1.4f' % dist, end='')
+					if (label_list[i] == label_list[j]) and (dist < 0.05):
+						print("(T)", end='')
+					elif (label_list[i] != label_list[j]) and (dist > 0.05):
+						print("(T)", end='')
+					# else: print("\033[93m(F)\033[0m", end='') jupyter notebook realization
+					else: print("(F)", end='')
 				print('')
 
+			print('')
 			print("t-SNE dimension reduction")
 			X = TSNE(n_components=2).fit_transform(emb_array)
 			print(X)
