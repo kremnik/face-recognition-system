@@ -7,7 +7,8 @@ import math
 import tensorflow as tf
 import numpy as np
 import facenet
-from sklearn.manifold import TSNE # for dimension reduction
+from sklearn.manifold import TSNE # for t-SNE dimension reduction
+from sklearn.decomposition import PCA # for PCA dimension reduction
 
 def main():
 	with tf.Graph().as_default():
@@ -62,11 +63,18 @@ def main():
 						print("(FP)", end='')
 				print('')
 
+			# t-SNE dimension reduction
 			print('')
 			print("t-SNE dimension reduction")
-			X = TSNE(n_components=2).fit_transform(emb_array)
-			print(X)
+			emb_tsne = TSNE(n_components=2).fit_transform(emb_array)
+			print(emb_tsne)
 			
+			# PCA dimension reduction
+			print('')
+			print("PCA dimension reduction")
+			pca = PCA(n_components=5) # number of components must be either less or equal to number of training (or test) examples
+			emb_pca = pca.fit(emb_array).transform(emb_array)
+			print(emb_pca)
 	
 if __name__ == '__main__':
     main()
