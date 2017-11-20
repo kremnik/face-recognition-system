@@ -41,22 +41,25 @@ def main():
 				emb_array[start_index:end_index,:] = sess.run(embeddings, feed_dict=feed_dict)
 			
 			n_images = len(paths)
+			threshold = 1.0
 			print('Distance matrix')
 			print('    ', end='')
-			for i in range(n_images):
-				print('    %1d     ' % i, end='')
+			for i in range(len(paths)):
+				print('    %3d     ' % i, end='')
 			print('')
-			for i in range(n_images):
+			for i in range(len(paths)):
 				print('%1d  ' % i, end='')
-				for j in range(n_images):
+				for j in range(len(paths)):
 					dist = np.linalg.norm(emb_array[i,:] - emb_array[j,:])
 					print('  %1.4f' % dist, end='')
-					if (label_list[i] == label_list[j]) and (dist < 0.05):
-						print("(T)", end='')
-					elif (label_list[i] != label_list[j]) and (dist > 0.05):
-						print("(T)", end='')
-					# else: print("\033[93m(F)\033[0m", end='') jupyter notebook realization
-					else: print("(F)", end='')
+					if (label_list[i] == label_list[j]) and (dist <= threshold):
+						print("(TP)", end='')
+					elif (label_list[i] != label_list[j]) and (dist > threshold):
+						print("(TN)", end='')
+					elif (label_list[i] == label_list[j]) and (dist > threshold):
+						print("(FN)", end='')
+					elif (label_list[i] != label_list[j]) and (dist <= threshold):
+						print("(FP)", end='')
 				print('')
 
 			print('')
