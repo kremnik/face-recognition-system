@@ -75,6 +75,40 @@ def main():
 			pca = PCA(n_components=5) # number of components must be either less or equal to number of training (or test) examples
 			emb_pca = pca.fit(emb_array).transform(emb_array)
 			print(emb_pca)
+			
+			# Fisher's discriminant
+			print('')
+			print('Fisher\'s discriminant')
+			E = np.linalg.inv(np.cov(emb_pca.T))
+			num = 7
+			y = emb_pca[num,:] # separate y from others
+			
+			emb_del = np.delete(emb_pca, (num), axis=0)
+			
+			D = (y - (1 / (len(emb_pca) - 1) * np.sum(emb_del)))
+			w = np.dot(E, D)
+			c = np.dot(w / np.linalg.norm(w), y)
+			
+			lng = len(emb_pca)
+			l = []
+			for i in range(lng - 1):
+				l.append(np.dot(w / np.linalg.norm(w), emb_del[i,:]) - c)
+				
+			label_del = np.delete(label_list, (num), axis=0)
+			
+			label = label_list[num]
+			print("class:", label)
+			
+			for i in range(lng-1):
+				if label != label_del[i] and l[i] < 0:
+					mark = "TP"
+				elif label != label_del[i] and l[i] >= 0:
+					mark = "FP"
+				elif label == label_del[i] and l[i] < 0:
+					mark = "FN"
+				elif label == label_del[i]  and l[i] >= 0:
+					mark = "TN"
+				print(l[i], label_del[i], mark)
 	
 if __name__ == '__main__':
     main()
