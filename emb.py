@@ -16,7 +16,7 @@ def main():
 			data_set = facenet.get_dataset("../../datasets/ownpeople/ownpeople_mtcnnpy_160")
 			paths, label_list = facenet.get_image_paths_and_labels(data_set)
 			
-			paths = paths[0:5] # just 5 pictures for speed
+			# paths = paths[0:5] # just 5 pictures for speed
 			
 			print("Loading model")
 			facenet.load_model("20170511-185253")
@@ -72,7 +72,7 @@ def main():
 			# PCA dimension reduction
 			print('')
 			print("PCA dimension reduction")
-			pca = PCA(n_components=5) # number of components must be either less or equal to number of training (or test) examples
+			pca = PCA(n_components=7) # number of components must be either less or equal to number of training (or test) examples
 			emb_pca = pca.fit(emb_array).transform(emb_array)
 			print(emb_pca)
 			
@@ -80,7 +80,7 @@ def main():
 			print('')
 			print('Fisher\'s discriminant')
 			E = np.linalg.inv(np.cov(emb_pca.T))
-			num = 7
+			num = 5
 			y = emb_pca[num,:] # separate y from others
 			
 			emb_del = np.delete(emb_pca, (num), axis=0)
