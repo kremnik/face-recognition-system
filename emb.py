@@ -93,20 +93,14 @@ def main():
 			w = np.dot(E, D)
 			c = np.dot(w / np.linalg.norm(w), y)
 			
-			lng = len(emb_pca)
-			l = []
-			for i in range(lng - 1):
-				# Mahalanobis' distance
-				l.append(np.dot(w / np.linalg.norm(w), test) - c)
+			# Mahalanobis' distance
+			l = np.dot(w / np.linalg.norm(w), test) - c
 			
-			label_del = np.delete(label_list, (test_num), axis=0) # cutting off the test label from the train labels set
-			label_del = np.delete(label_list, (num), axis=0)
+			# label_del = np.delete(label_list, (test_num), axis=0) # cutting off the test label from the train labels set
+			# label_del = np.delete(label_list, (num), axis=0)
 			
-			label = label_list[num]
-			print("class:", label)
-			
-			for i in range(lng - 1):
-				print(l[i], label_del[i])
+			print('')
+			print("l = ", l)
 	
 if __name__ == '__main__':
     main()
