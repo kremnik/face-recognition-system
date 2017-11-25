@@ -141,22 +141,20 @@ def main():
 	print('Runnning forward pass')
 	emb_array = forward(train_paths, 10, images_placeholder, embeddings, phase_train_placeholder, image_size, embedding_size, sess)
 
-	fisher_train = forward(["../../datasets/ownpeople/ownpeople_mtcnnpy_160/me/photo_2016-12-25_20-59-23.png"], 1, images_placeholder, embeddings, phase_train_placeholder, image_size, embedding_size, sess)
-	fisher_test_1 = forward(["../../datasets/ownpeople/ownpeople_mtcnnpy_160/me/photo_2016-12-25_20-59-23.png"], 1, images_placeholder, embeddings, phase_train_placeholder, image_size, embedding_size, sess)
-	fisher_test_2 = forward(["../../datasets/ownpeople/ownpeople_mtcnnpy_160/me/photo_2017-08-26_20-24-22.png"], 1, images_placeholder, embeddings, phase_train_placeholder, image_size, embedding_size, sess)
-	fisher_test_3 = forward(["../../datasets/ownpeople/ownpeople_mtcnnpy_160/me/photo_2017-10-31_16-36-11.png"], 1, images_placeholder, embeddings, phase_train_placeholder, image_size, embedding_size, sess)
-	fisher_test_4 = forward(["../../datasets/ownpeople/ownpeople_mtcnnpy_160/viks/photo_2017-05-19_00-35-56.png"], 1, images_placeholder, embeddings, phase_train_placeholder, image_size, embedding_size, sess)
-	fisher_test_5 = forward(["../../datasets/ownpeople/ownpeople_mtcnnpy_160/viks/photo_2017-07-15_17-05-07.png"], 1, images_placeholder, embeddings, phase_train_placeholder, image_size, embedding_size, sess)
-	fisher_test_6 = forward(["../../datasets/ownpeople/ownpeople_mtcnnpy_160/viks/photo_2017-09-26_00-32-31.png"], 1, images_placeholder, embeddings, phase_train_placeholder, image_size, embedding_size, sess)
-
 	# Training Fisher's discriminant
-	c, w = trainFisher(emb_array, fisher_train[0])
+	c, w = trainFisher(emb_array[5:9], emb_array[0]) # 5:9 are samples of class with label '5'
 
-	# Fisher's discriminant result
-	l = Fisher(w, c, fisher_test_6[0])
-	
+	# Fisher's discriminant result (accuracy)
+	summ = 0
+	for i in range(len(emb_array)):
+		l = Fisher(w, c, emb_array[i])
+		if l < 0 and train_labels[i] != 5:
+			summ += 1
+		elif l >= 0 and train_labels[i] == 5:
+			summ += 1
+			
 	print('')
-	print('Result:', l)
+	print("Accuracy: ", summ / len(emb_array))
 	
 if __name__ == '__main__':
     main()
